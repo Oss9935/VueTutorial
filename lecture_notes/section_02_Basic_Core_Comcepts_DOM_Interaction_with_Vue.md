@@ -23,33 +23,38 @@
   * `data` 키에 등록된 함수는 "반드시" object를 리턴해야 함
     * 리턴되는 object를 통해 Vue 앱이 html을 어떻게 제어할지 결정
 
-```html
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vue Basics</title>
-    <link
-      href="https://fonts.googleapis.com/css2?family=Jost:wght@400;700&display=swap"
-      rel="stylesheet"
-    />
-    <link rel="stylesheet" href="styles.css" />
-    <script src="https://unpkg.com/vue@next" defer></script>
-    <script src="app.js" defer></script>
-  </head>
-  <body>
-    <header>
-      <h1>Vue Course Goals</h1>
-    </header>
-    <section id="user-goal">
-      <h2>My Course Goal</h2>
-      <p></p>
-    </section>
-  </body>
-</html>
-```
+- code 
 
+  <details>
+  <summary>index.html</summary>
+
+  ```html
+  <!DOCTYPE html>
+  <html lang="en">
+    <head>
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <title>Vue Basics</title>
+      <link
+        href="https://fonts.googleapis.com/css2?family=Jost:wght@400;700&display=swap"
+        rel="stylesheet"
+      />
+      <link rel="stylesheet" href="styles.css" />
+      <script src="https://unpkg.com/vue@next" defer></script>
+      <script src="app.js" defer></script>
+    </head>
+    <body>
+      <header>
+        <h1>Vue Course Goals</h1>
+      </header>
+      <section id="user-goal">
+        <h2>My Course Goal</h2>
+        <p></p>
+      </section>
+    </body>
+  </html>
+  ```
+  </details>
 
 # 14. Interpolation and Data Binding
 
@@ -61,45 +66,54 @@
 * Interpolation 이란? : 뇌피셜로 짐작해보면 단어 뜻 그 자체 대로 두 pole(점)을 이어 주는 느낌. 여기서 pole이 데이터가 될 듯
   * `{{ }}` 형태로 쓰면 됨
 
+* code
 
-```html
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vue Basics</title>
-    <link
-      href="https://fonts.googleapis.com/css2?family=Jost:wght@400;700&display=swap"
-      rel="stylesheet"
-    />
-    <link rel="stylesheet" href="styles.css" />
-    <script src="https://unpkg.com/vue@next" defer></script>
-    <script src="app.js" defer></script>
-  </head>
-  <body>
-    <header>
-      <h1>Vue Course Goals</h1>
-    </header>
-    <section id="user-goal">
-      <h2>My Course Goal</h2>
-      <p>{{ courseGoal }}</p>
-    </section>
-  </body>
-</html>
-```
+  <details>
+  <summary>index.html</summary>
 
-```js
-const app = Vue.createApp({
-  data(){
-    return {
-      courseGoal : "Finish the course and learn Vue!"
-    };
-  }
-});
+  ```html
+  <!DOCTYPE html>
+  <html lang="en">
+    <head>
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <title>Vue Basics</title>
+      <link
+        href="https://fonts.googleapis.com/css2?family=Jost:wght@400;700&display=swap"
+        rel="stylesheet"
+      />
+      <link rel="stylesheet" href="styles.css" />
+      <script src="https://unpkg.com/vue@next" defer></script>
+      <script src="app.js" defer></script>
+    </head>
+    <body>
+      <header>
+        <h1>Vue Course Goals</h1>
+      </header>
+      <section id="user-goal">
+        <h2>My Course Goal</h2>
+        <p>{{ courseGoal }}</p>
+      </section>
+    </body>
+  </html>
+  ```
+  </details>
 
-app.mount('#user-goal')
-```
+  <details>
+  <summary>app.js</summary>
+
+  ```js
+  const app = Vue.createApp({
+    data(){
+      return {
+        courseGoal : "Finish the course and learn Vue!"
+      };
+    }
+  });
+
+  app.mount('#user-goal')
+  ```
+  </details>
 
 # 15. Binding Attributes with the "v-bind" Directive
 * v-bind 디렉티브의 필요성
@@ -125,54 +139,63 @@ app.mount('#user-goal')
 * Vue 앱이 HTML 제어를 위해 활용하는 data 프로퍼티는 key as function의 형태인 반면
 * methods는 object를 key로 함.
 
-```html
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vue Basics</title>
-    <link
-      href="https://fonts.googleapis.com/css2?family=Jost:wght@400;700&display=swap"
-      rel="stylesheet"
-    />
-    <link rel="stylesheet" href="styles.css" />
-    <script src="https://unpkg.com/vue@next" defer></script>
-    <script src="app.js" defer></script>
-  </head>
-  <body>
-    <header>
-      <h1>Vue Course Goals</h1>
-    </header>
-    <section id="user-goal">
-      <h2>My Course Goal</h2>
-      <p>{{ outputGoal() }}</p>
-    </section>
-  </body>
-</html>
-```
+* code 
+  <details>
+  <summary>index.html</summary>
 
-```js
-const app = Vue.createApp({
-  data(){
-    return {
-      courseGoal : "Finish the course and learn Vue!"
-    };
-  },
-  methods: {
-    outputGoal() {
-      const randomNumber = Math.random();
-      if (randomNumber < 0.5) {
-        return 'Learn Vue!';
-      } else {
-        return 'Master Vue!';
+  ```html
+  <!DOCTYPE html>
+  <html lang="en">
+    <head>
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <title>Vue Basics</title>
+      <link
+        href="https://fonts.googleapis.com/css2?family=Jost:wght@400;700&display=swap"
+        rel="stylesheet"
+      />
+      <link rel="stylesheet" href="styles.css" />
+      <script src="https://unpkg.com/vue@next" defer></script>
+      <script src="app.js" defer></script>
+    </head>
+    <body>
+      <header>
+        <h1>Vue Course Goals</h1>
+      </header>
+      <section id="user-goal">
+        <h2>My Course Goal</h2>
+        <p>{{ outputGoal() }}</p>
+      </section>
+    </body>
+  </html>
+  ```
+  </details>
+
+  <details>
+  <summary>app.js</summary>
+
+  ```js
+  const app = Vue.createApp({
+    data(){
+      return {
+        courseGoal : "Finish the course and learn Vue!"
+      };
+    },
+    methods: {
+      outputGoal() {
+        const randomNumber = Math.random();
+        if (randomNumber < 0.5) {
+          return 'Learn Vue!';
+        } else {
+          return 'Master Vue!';
+        }
       }
     }
-  }
-});
+  });
 
-app.mount('#user-goal')
-```
+  app.mount('#user-goal')
+  ```
+  </details>
 
 # 17. Working with Data inside of a Vue App
 * Vue 앱은 HTML을 제어하기 위한 설정 object를 `createApp()` 메소드의 전달인자로 전달한다.
@@ -185,57 +208,65 @@ app.mount('#user-goal')
   
 ![data_method_this](../img/data_method_this.png)
 
+ * code
+    <details>
+    <summary>index.html</summary>
 
-```html
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vue Basics</title>
-    <link
-      href="https://fonts.googleapis.com/css2?family=Jost:wght@400;700&display=swap"
-      rel="stylesheet"
-    />
-    <link rel="stylesheet" href="styles.css" />
-    <script src="https://unpkg.com/vue@next" defer></script>
-    <script src="app.js" defer></script>
-  </head>
-  <body>
-    <header>
-      <h1>Vue Course Goals</h1>
-    </header>
-    <section id="user-goal">
-      <h2>My Course Goal</h2>
-      <p>{{ outputGoal() }}</p>
-    </section>
-  </body>
-</html>
-```
+    ```html
+    <!DOCTYPE html>
+    <html lang="en">
+      <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Vue Basics</title>
+        <link
+          href="https://fonts.googleapis.com/css2?family=Jost:wght@400;700&display=swap"
+          rel="stylesheet"
+        />
+        <link rel="stylesheet" href="styles.css" />
+        <script src="https://unpkg.com/vue@next" defer></script>
+        <script src="app.js" defer></script>
+      </head>
+      <body>
+        <header>
+          <h1>Vue Course Goals</h1>
+        </header>
+        <section id="user-goal">
+          <h2>My Course Goal</h2>
+          <p>{{ outputGoal() }}</p>
+        </section>
+      </body>
+    </html>
+    ```
+    </details>
 
-```js
-const app = Vue.createApp({
-  data(){
-    return {
-      courseGoalA : "Finish the course and learn Vue",
-      courseGoalB : "Master Vue and build amazing apps!",
-      vueLink: 'https://vuejs.org/'
-    };
-  },
-  methods: {
-    outputGoal() {
-      const randomNumber = Math.random();
-      if (randomNumber < 0.5) {
-        return this.courseGoalA;
-      } else {
-        return this.courseGoalB;
+    <details>
+    <summary>app.js</summary>
+
+    ```js
+    const app = Vue.createApp({
+      data(){
+        return {
+          courseGoalA : "Finish the course and learn Vue",
+          courseGoalB : "Master Vue and build amazing apps!",
+          vueLink: 'https://vuejs.org/'
+        };
+      },
+      methods: {
+        outputGoal() {
+          const randomNumber = Math.random();
+          if (randomNumber < 0.5) {
+            return this.courseGoalA;
+          } else {
+            return this.courseGoalB;
+          }
+        }
       }
-    }
-  }
-});
+    });
 
-app.mount('#user-goal')
-```
+    app.mount('#user-goal')
+    ```
+    </details>
 
 # 18. Outputting Raw HTML Content with v-html
 * 필요성
@@ -254,47 +285,56 @@ app.mount('#user-goal')
 
 # 20. Understanding Event Binding
 * 모던 웹을 구성하는데 있어 필수 요소인 사용자의 입력과 이벤트를 Vue 앱에서 처리하는 방법에 대해 배움
+* code
 
-```html
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vue Basics</title>
-    <link
-      href="https://fonts.googleapis.com/css2?family=Jost:wght@400;700&display=swap"
-      rel="stylesheet"
-    />
-    <link rel="stylesheet" href="styles.css" />
-    <script src="https://unpkg.com/vue@next" defer></script>
-    <script src="app.js" defer></script>
-  </head>
-  <body>
-    <header>
-      <h1>Vue Events</h1>
-    </header>
-    <section id="events">
-      <h2>Events in Action</h2>
-      <button>Add</button>
-      <button>Remove</button>
-      <p>Result: {{ counter }}</p>
-    </section>
-  </body>
-</html>
-```
+  <details>
+  <summary>index.html</summary>
 
-```js
-const app = Vue.createApp({
-  data() {
-    return {
-      counter: 0,
-    };
-  },
-});
+  ```html
+  <!DOCTYPE html>
+  <html lang="en">
+    <head>
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <title>Vue Basics</title>
+      <link
+        href="https://fonts.googleapis.com/css2?family=Jost:wght@400;700&display=swap"
+        rel="stylesheet"
+      />
+      <link rel="stylesheet" href="styles.css" />
+      <script src="https://unpkg.com/vue@next" defer></script>
+      <script src="app.js" defer></script>
+    </head>
+    <body>
+      <header>
+        <h1>Vue Events</h1>
+      </header>
+      <section id="events">
+        <h2>Events in Action</h2>
+        <button>Add</button>
+        <button>Remove</button>
+        <p>Result: {{ counter }}</p>
+      </section>
+    </body>
+  </html>
+  ```
+  </details>
 
-app.mount('#events');
-```
+  <details>
+  <summary>app.js</summary>
+
+  ```js
+  const app = Vue.createApp({
+    data() {
+      return {
+        counter: 0,
+      };
+    },
+  });
+
+  app.mount('#events');
+  ```
+  </details>
 
 # 21. Events & Methods
 
