@@ -250,7 +250,7 @@ app.mount('#user-goal')
 # 19. A - First Summary
 
 # Assign1 : Time to Pratice : Data Binding
-* [link_assign1]("../src/Assign01")
+* [link_assign1](../src/Assign_01)
 
 # 20. Understanding Event Binding
 * 모던 웹을 구성하는데 있어 필수 요소인 사용자의 입력과 이벤트를 Vue 앱에서 처리하는 방법에 대해 배움
