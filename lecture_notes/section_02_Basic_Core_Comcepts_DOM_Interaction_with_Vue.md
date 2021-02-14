@@ -123,7 +123,7 @@
   ![html_format](https://mdn.mozillademos.org/files/9347/grumpy-cat-small.png)
 
   * Vue에서는 HTML attribute를 제어하기 위한 syntax로 v-bind 디렉티브를 제공함
-  * v-bine 디렉티브는 HTML 엘리먼트 중 태그의 attribte를 Vue 앱에서 관리하는 데이터와 bind 하기 위한 명령어
+  * v-bind 디렉티브는 HTML 엘리먼트 중 태그의 attribte를 Vue 앱에서 관리하는 데이터와 bind 하기 위한 명령어
 
 * v-bind 디렉티브의 활용 방법
   * HTML
@@ -283,8 +283,47 @@
 # Assign1 : Time to Pratice : Data Binding
 * [link_assign1](../src/Assign_01)
 
-# 20. Understanding Event Binding
-* 모던 웹을 구성하는데 있어 필수 요소인 사용자의 입력과 이벤트를 Vue 앱에서 처리하는 방법에 대해 배움
+# 20. Understanding Event Binding && 21. Events & Methods
+* 모던 웹을 구성하는데 있어 필수 요소 중 사용자의 입력인 `이벤트`를 Vue 앱에서 처리하는 방법에 대해 배움
+* Vue에서 이벤트를 다루는 방법에 대해 알아보기 전에 Vue 이전에는 어떤 방식으로 이벤트를 핸들링했는지 정리해보자
+
+  * button 클릭 시 이벤트 핸들러 호출
+    ```js
+    //common click handler
+    let clickHandler = function(event) {
+      console.log('click handler called : ', event);
+    }
+    ```
+
+  * Vanilla Javascript (getElementsByTagName, querySelector)
+    ```js
+    let btns_1 = document.getElementsByTagName('button');
+    for (let btn of btns_1) {
+      btn.addEventListener('click', clickHandler);
+    }
+
+    /* Vanilla JS - queryselector*/
+    let btns_2 = document.querySelectorAll('button');
+    for (let btn of btns_2) {
+      btn.addEventListener('click', clickHandler);
+    }
+    ```
+
+  * JQuery
+  
+    ```js
+    let $btns_3 = $('button')
+    for(btn of $btns_3) {
+      btn.addEventListener('click', clickHandler());
+    }
+
+    ```
+
+* vue에서 이벤트를 처리하는 방법?
+  * `v-on` 디렉티브 사용
+    *  `v-on:click="your_handler` 
+    *  `@click=your_handler`
+
 * code
 
   <details>
@@ -311,8 +350,8 @@
       </header>
       <section id="events">
         <h2>Events in Action</h2>
-        <button>Add</button>
-        <button>Remove</button>
+        <button v-on:click="add">Add</button>
+        <button v-on:click="reduce">Reduce</button>
         <p>Result: {{ counter }}</p>
       </section>
     </body>
@@ -327,26 +366,145 @@
   const app = Vue.createApp({
     data() {
       return {
-        counter: 0,
+          counter: 0,
       };
     },
+    methods : {
+      add() {
+          this.counter += 1;
+      },
+      reduce() {
+          this.counter -= 1;
+      }
+    }
   });
 
   app.mount('#events');
   ```
   </details>
 
-# 21. Events & Methods
+* Event 인터페이스?
+  * DOM 내에 위치한 이벤트를 말함
+  * Event 발생?
+    * 사용자 입력 : 마우스 클릭, 키보드 입력 등
+    * API가 생성 : 비동기 작업 등의 진행을 나타내기 위한 목적 등으로 사용되기도 함.
+  * Event 생성 방법( `programmnatic` )?
+    * `HTMLElement.click()` 메서드 호출
+    * 이벤트 정의 후 특정 대상에 대해 `dispatch`
+      * `EventTarget.dispatchEvent()`
+
+  * 많은 DOM 요소에서 Event 수신/처리 코드를 실행 가능
+    * 이벤트 처리기는 일반적으로 `EventTarget.addEventListener()`를 통해, 다양한 DOM 요소 `<button> <div> <span> ...` 에 부착됨.
+    * 이벤트 처리기 제거 : `removeEventListener()`
+
+  * 다양한 Event : https://developer.mozilla.org/ko/docs/Web/Events
 
 # 22. Working with Event Arguments
+* 이벤트 핸들러 메소드에서 전달인자를 활용하는 방법
+* code
+  <details>
+    <summary>index.html</summary>
+
+    ```html
+    <section id="events">
+      <h2>Events in Action</h2>
+      <button v-on:click="add(5)">Add</button>
+      <button v-on:click="reduce(5)">Reduce</button>
+      <p>Result: {{ counter }}</p>
+    </section>
+    ```
+  </details>
+
+  <details>
+    <summary>app.js</summary>
+
+    ```js
+    const app = Vue.createApp({
+      data() {
+        return {
+          counter: 0,
+        };
+      },
+      methods : {
+        add(num) {
+          this.counter += num;
+        },
+        reduce(num) {
+          this.counter -= num;
+        }
+      }
+    })
+    ```
+  </details>
+
 
 # 23. Using the Native Event Object
+* 사용자가 `<input>`, `<select>` 및 `<textarea>` HTML 요소에 `입력한 값`을 활용하는 방법?
+  * `Event interface` 의 `target 속성` 을 활용하면 됨
+  * `triggred_event.target.value`
+
+* 여기서 전달인자로 주어진 `event`는 `javascript event object`
+
+* `input 이벤트`는 `<input>`, `<select>` 및 `<textarea>` 요소의 `value` 속성이 바뀔 때마다 발생한다.
+
+* code
+  <details>
+    <summary>index.html</summary>
+
+    ```html
+    <section id="events">
+      <h2>Events in Action</h2>
+      <button v-on:click="add(5)">Add</button>
+      <button v-on:click="reduce(5)">Reduce</button>
+      <p>Result: {{ counter }}</p>
+      <input type="text" v-on:input="setName($event, 'kim')">
+      <p>Your Name: {{ name }} </p>
+    </section>
+    ```
+  </details>
+
+  <details>
+    <summary>app.js</summary>
+
+    ```js
+    const app = Vue.createApp({
+      data() {
+        return {
+          counter: 0,
+          name: "",
+        };
+      },
+      methods : {
+        add(num) {
+          this.counter += num;
+        },
+        reduce(num) {
+          this.counter -= num;
+        },
+        setName(event, lastName) {
+          this.name = event.target.value + ' ' + lastName;
+        }
+      }
+    })
+    ```
+  </details>
+
+* Event 트리거하는 방법(팁)
+  ```js
+  let btn = $('button')[0];
+  let event = new Event('click');
+  btn.dispatchEvent(event);
+
+  ```
 
 # 24. Exploring Event Modifiers
 
+
 # 25. Locking Content with v-once
 
+
 # Assign2 : Time to Practice : Event Binding
+
 
 # 26. Data Binding + Event Binding = Two-Way Binding
 
