@@ -498,10 +498,125 @@
   ```
 
 # 24. Exploring Event Modifiers
+* HTML에서 `form` 태그를 만들어서 `submit button` 을 통해 `form` 데이터를 전송하면, 해당 `form` 내의 데이터를 서버측에 전송하고, 서버측에서 HTML을 자동으로 받아 렌더링하는 일련의 브라우저 기본 동작이 실행됨.
 
+* 일반적인 웹앱의 경우 이러한 현상이 문제가 될 것은 별로 없지만, Vue의 경우 Vue 인스턴스 내의 데이터 또한 리프레시 되어버리기 때문에, 사용중인 데이터 또한 날라가 버리는 현상이 발생함.
+
+* 따라서 Vue를 쓰다보면, 이러한 browser default 동작을 prevent해야하는 필요성이 생김.
+
+* 하지만 Vue의 `v-on` 디렉티브로 form 데이터 전송에 대한 이벤트 리스너를 등록하더라도, 이러한 browser default로 인한 페이지 리프레시는 여전히 발생하게 됨.
+
+* 이럴 때 사용할 수 있는 Vue의 기능이 `prevent modifier`
+  
+  <details>
+    <summary>manner 1 : event.preventDefault()</summary>
+
+    * index.html 
+  
+    ```html
+      <form v-on:submit="submitFormHandler">
+        <input type="text" />
+        <button>Sign Up</button>
+      </form>
+    ```
+    
+    * app.js 
+
+    ```js
+      const app = Vue.createApp({
+        data() {
+          return {
+            name : ''
+          };
+        },
+        methods: {
+          submitFormHandler(event){
+            event.preventDefault();
+            alert('submitted');
+          }
+        }
+      })
+    ```
+  </details>
+  
+  <details>
+    <summary>manner 2 : v-on:submit.prevent="handler" </summary>
+    
+    * index.html
+
+    ```html
+      <form v-on:submit.prevent="submitHandler">
+        <input type="text" name="tmp"/>
+        <button>Sign Up</button>
+      </form>
+    ```
+
+  </details>
+
+* HTML form 기초
+
+  ```html
+  <form action="/my-handling-form-page" method="post">
+      <div>
+          <label for="name">Name:</label>
+          <input type="text" id="name" name="user_name"/>
+      </div>
+      <div>
+          <label for="mail">E-mail:</label>
+          <input type="email" id="mail" name="user_id"/>
+      </div>
+      <div>
+          <label for="msg">Message:</label>
+          <textarea id="msg" name="user_msg"></textarea>
+      </div>
+
+      <div class="button">
+          <button type="submit">Send your message</button>
+      </div>
+  </form>
+  ```
+
+  * `action` attribute : 데이터를 보낼 URL을 지정
+  * `method` attribute : 어떤 HTTP 방식을 사용할지 지정(GET, POST, ...)
+  * `label`의 `for` attribute : 모든 `<label>` 요소에서 `form` 위젯과 `label`을 연결하기 위해 사용
+    * `label` 의 `for` attribute와 해당 `label` 과 연결되는 `<input> <textarea>` 등의 `id` attribute이 매핑됨
+  * `<input>`의 `type` attribute : `<input>` 요소가 어떻게 입력을 받을지를 정의
+    * [상세 : native form widgets](https://developer.mozilla.org/en-US/docs/Learn/Forms/Basic_native_form_controls)
+  * 버튼 종류 3가지
+    * `submit` : `submit` 속성이 지정된 버튼을 클릭하면, 정의된 `form`에 입력된 데이터를 `<form>` 요소의 `action` 속성에 정의된 웹 페이지에 전송함
+    * `reset` : 모든 `form` widget을 기본 값으로 변경. (UX 관점에서 권장하지 않는 방법)
+    * `button` : 클릭해도 기본적으로는 아무것도 안함. (js를 사용하여 사용자가 정의한 기능을 수행하는 버튼으로 활용할 때 많이 사용됨)
+  * `<input>` 요소를 사용하여 버튼을 만들 수도 있음.
+    * 해당 방법과 `<button>`을 사용하는 방식의 큰 차이점은, `<input>`요소를 사용할 경우 오직 일반 텍스트만 전송되는 반면, `<button>`을 사용할 경우 전체 HTML 콘텐츠를 전송 가능
+    * `<input type="button" value="click" />`
+    
+  * `HTML form` 내의 `submit` attribue 가 지정된 `<button>`을 클릭하면, `form`에 사용자가 입력한 데이터를 서버로 전송함
+    * 전송되는 `form` 의 데이터는 `name` attribute로 지정한 이름(데이터의 이름)으로 식별 가능함
+    * 지정된 이름에 따라 데이터가 `key-value pair` 로 전송됨
+
+
+* 이렇게 event modifier는 form 데이터 전송과 같이 브라우저의 기본적인 동작들을 변경할 수 있는 수단이 됨
+  * right click 이벤트에 대해서도 아래처럼 변경 가능
+    ```html
+    <button v-on:click.right="reduce(5)">Subtract 5</button>
+    ```
+
+  * enter keyup 이벤트(ctrl, shift, page-down, ...)
+    ```html
+    <input 
+      type="text"
+      v-on:input="setName($event, 'Schwarzmüller')"
+      v-on:keyup.enter="setConfirmedName"
+    />
+    ```
 
 # 25. Locking Content with v-once
+* 잘은 안쓰이는 디렉티브
+* interpolation을 비롯한 다양한 data binding 시, 오직 한번만 데이터가 evaluated 되게 됨.
 
+```html
+<p v-once>Result : {{ counter }}</p>
+```
 
 # Assign2 : Time to Practice : Event Binding
 
