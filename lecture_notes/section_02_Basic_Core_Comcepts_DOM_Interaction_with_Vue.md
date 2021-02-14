@@ -619,9 +619,10 @@
 ```
 
 # Assign2 : Time to Practice : Event Binding
-
+* [link_assign2](../src/Assign_02)
 
 # 26. Data Binding + Event Binding = Two-Way Binding
+
 
 # 27. Methods used for Data Binding: How It Works
 
