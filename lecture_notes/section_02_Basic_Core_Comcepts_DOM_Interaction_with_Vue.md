@@ -441,7 +441,7 @@
 # 23. Using the Native Event Object
 * 사용자가 `<input>`, `<select>` 및 `<textarea>` HTML 요소에 `입력한 값`을 활용하는 방법?
   * `Event interface` 의 `target 속성` 을 활용하면 됨
-  * `triggred_event.target.value`
+  * `<triggred_event>.target.value`
 
 * 여기서 전달인자로 주어진 `event`는 `javascript event object`
 
@@ -622,6 +622,196 @@
 * [link_assign2](../src/Assign_02)
 
 # 26. Data Binding + Event Binding = Two-Way Binding
+
+## Two Way Binding
+* `v-bind:value` + `v-on:input` => `v-model:<name>`
+
+* 앞서 Vue 앱의 데이터가 DOM에 반영되는 `Data Binding`과, DOM에서 발생한 사용자의 입력 이벤트를 Vue 앱 내에서 접근하는 `Event Binding` 방법에 대해 살펴보았음.
+* 그런데 다음의 패턴과 같이 사용자의 입력을 받는 Input Form이 있고, 사용자가 reset 버튼을 눌렀을 때, 해당 Input Form 내의 value를 공백으로 초기화 해주는 경우를 생각해보자
+* 이 경우는 Input Form과 같이 사용자의 입력 이벤트에 대한 바인딩과, reset 버튼을 눌렀을 때 변경되는 Vue 앱 내의 데이터를 다시 DOM에 반영해주는 데이터에 대한 바인딩 과정이 모두 필요함.
+
+* 먼저 아래와 같이, `document.querySelector`를 활용하여 DOM 내의 데이터를 직접 변경하는 방식으로 리셋 로직을 구현해보자. 
+  * (이 방법이 안되는 이유는??)
+
+  <details>
+  <summary>Example Code : document.querySelector를 사용한 방법</summary>
+
+  ```html
+  <body>
+    <header>
+      <h1>Vue Events</h1>
+    </header>
+    <section id="events">
+      <h2>Events in Action</h2>
+      <button v-on:click="add(10)">Add 10</button>
+      <button v-on:click="reduce(5)">Subtract 5</button>
+      <p>Result: {{ counter }}</p>
+      <input type="text" v-on:input="setName($event)">
+      <p>Your Name: {{ name }}</p>
+
+      <!-- Today's concern -->
+      <button>Reset</button>
+    </section>
+  </body>
+  ```
+
+  ```js
+  const app = Vue.createAPp({
+    data() {
+      return {
+        counter: 0,
+        name: ''
+      };
+    },
+    methods : {
+      setName(event) {
+        this.name = event.target.value;
+      },
+      add(num) {
+        this.counter += num;
+      },
+      reduce(num) {
+        this.counter -= num;
+      },
+      resetInput() {
+        // (Hacky) : 이 방법은 input 엘리먼트 내의 value를 공백으로 초기화
+        // 지워진 값이 Vue app의 name 데이터에 반영이 안됨
+        document.querySelector('input').value = '';
+      }
+    }
+  });
+
+  app.mount("#events");
+  ```
+
+  </details>
+
+* Vue의 feature를 활용하여 데이터와 템플릿을 양방향으로 바인딩하는 방법?
+  * 양방향 바인딩 방법 -> `Event Binding + Data Binding`
+  * 사용자가 Input Form에 데이터를 입력하였을 발생하는 이벤트를 통해, Vue 앱 내의 데이터를 관리하는 `Event Binding`
+    * Input 엘리먼트의 value 값을 Vue 앱 인스턴스에 저장
+    * `this.name = event.target.value;` 
+  * Vue 앱 인스턴스 내의 name 데이터 -> DOM : `Data Binding`
+    * Input 엘리먼트의 `value` 속성을 활용!
+    * `<input v-bind:value="name" />`
+
+* Vue의 양방향 바인딩 방법 1
+  ```html
+  <input type="text" v-bind:value="name" v-on:input="setName($event)" />
+  ```
+  <details>
+  <summary>Example Code : Vue Feature 1(v-bind, v-on)</summary>
+
+  ```html
+  <body>
+    <header>
+      <h1>Vue Events</h1>
+    </header>
+    <section id="events">
+      <h2>Events in Action</h2>
+      <button v-on:click="add(10)">Add 10</button>
+      <button v-on:click="reduce(5)">Subtract 5</button>
+      <p>Result: {{ counter }}</p>
+      <input type="text" v-bind:value="name" v-on:input="setName" />
+      <p>Your Name: {{ name }}</p>
+
+      <!-- Today's concern -->
+      <button @click="resetInput">Reset</button>
+    </section>
+  </body>
+  ```
+
+  ```js
+  const app = Vue.createAPp({
+    data() {
+      return {
+        counter: 0,
+        name: ''
+      };
+    },
+    methods : {
+      setName(event) {
+        this.name = event.target.value;
+      },
+      add(num) {
+        this.counter += num;
+      },
+      reduce(num) {
+        this.counter -= num;
+      },
+      resetInput() {
+        this.name = '';
+      }
+    }
+  });
+
+  app.mount("#events");
+  ```
+  </details>
+
+  * How it works?
+    1. 사용자가 Reset Button 클릭 : Click Event Handler 호출
+        * `this.name = '';`
+
+    2. Vue 인스턴스 내의 `name` 데이터가 변경되었기 때문에, `v-bind`를 통해 바인딩 된 `input` 엘리먼트의 `value` 속성(`name`)이 업데이트 됨!
+        * `<input type=text value="">`
+
+    3. 해당 `input` 엘리먼트의 `value` 속성이 변경되었기 떄문에, 등록된 `event handler`인 `setName() method`가 실행되어, Vue 앱 인스턴스의 `this.name` 값이 해당 `input`엘리먼트의 `value` 속성의 값으로 업데이트 됨
+        * `input` 이벤트는 `<input>` 요소의 `value` 속성이 변경될 때 마다 발생!
+
+* Vue의 양방향 바인딩 방법 2
+  * Vue는 위와 같은 `v-bind:value=<data_name>` + `v-on:input="eventHandler"` 을 통한 데이터 바인딩을 위한 `v-model` 디렉티브를 지원
+  * `v-model:<data_name>`
+  
+  ```html
+  <input type="text" v-model="name" />
+  ```
+  <details>
+  <summary>Example Code : Vue Feature 2(v-model)</summary>
+
+  ```html
+  <body>
+    <header>
+      <h1>Vue Events</h1>
+    </header>
+    <section id="events">
+      <h2>Events in Action</h2>
+      <button v-on:click="add(10)">Add 10</button>
+      <button v-on:click="reduce(5)">Subtract 5</button>
+      <p>Result: {{ counter }}</p>
+      <input type="text" v-model="name" />
+      <p>Your Name: {{ name }}</p>
+
+      <!-- Today's concern -->
+      <button @click="resetInput">Reset</button>
+    </section>
+  </body>
+  ```
+
+  ```js
+  const app = Vue.createAPp({
+    data() {
+      return {
+        counter: 0,
+        name: ''
+      };
+    },
+    methods : {
+      add(num) {
+        this.counter += num;
+      },
+      reduce(num) {
+        this.counter -= num;
+      },
+      resetInput() {
+        this.name = '';
+      }
+    }
+  });
+
+  app.mount("#events");
+  ```
+  </details>
 
 
 # 27. Methods used for Data Binding: How It Works
