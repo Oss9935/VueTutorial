@@ -656,7 +656,7 @@
   ```
 
   ```js
-  const app = Vue.createAPp({
+  const app = Vue.createApp({
     data() {
       return {
         counter: 0,
@@ -722,7 +722,7 @@
   ```
 
   ```js
-  const app = Vue.createAPp({
+  const app = Vue.createApp({
     data() {
       return {
         counter: 0,
@@ -789,7 +789,7 @@
   ```
 
   ```js
-  const app = Vue.createAPp({
+  const app = Vue.createApp({
     data() {
       return {
         counter: 0,
@@ -815,6 +815,64 @@
 
 
 # 27. Methods used for Data Binding: How It Works
+
+* Vue 템플릿에서 데이터 interpolation을 사용할 때, 템플릿 내의 함수 호출 지양
+* Why?
+  * Vue는 내부적으로 변경된 데이터를 캐싱해놓고 변경 사항이 있을 때만 DOM에 없데이트 함.
+  * 하지만 템플릿 내에서 데이터가 아닌 함수 호출의 리턴값을 받아서 데이터로 사용하는 아래의 예제와 같은 경우, Vue 앱이 내부적으로 
+
+<details>
+<summary>Advanced Reactivity</summary>
+
+```html
+<body>
+  <header>
+    <h1>Vue Events</h1>
+  </header>
+  <section id="events">
+    <h2>Events in Action</h2>
+    <button v-on:click="add(10)">Add 10</button>
+    <button v-on:click="reduce(5)">Subtract 5</button>
+    <p>Result: {{ counter }}</p>
+    <input type="text" v-model="name" />
+    <p>Your Name: {{ outputFullName() }}</p>
+
+    <!-- Today's concern -->
+    <button @click="resetInput">Reset</button>
+  </section>
+</body>
+```
+
+```js
+const app = Vue.createApp({
+  data() {
+    return {
+      counter: 0,
+      name: ''
+    };
+  },
+  methods : {
+    add(num) {
+      this.counter += num;
+    },
+    reduce(num) {
+      this.counter -= num;
+    },
+    resetInput() {
+      this.name = '';
+    },
+    outputFullName() {
+      if(this.name === '') {
+        return '';
+      }
+      return this.name + ' kim'
+    }
+  }
+});
+
+app.mount("#events");
+```
+</details>
 
 # 28. Introducing Computed Properties
 
