@@ -1513,9 +1513,16 @@ app.mount('#styling');
 
 </details>
 
-
-
 # 35. Dynamic Classes: Array Syntax
+* array syntax로 dynamic class styling을 할 수도 있음
+
+```html
+<div 
+  :class="['demo', boxAClasses]" 
+  @click="boxSelected('A')" 
+></div>
+```
+
 
 # Assign 4 : Time to Practice : Dynamic Styling
 
