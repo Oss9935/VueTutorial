@@ -937,7 +937,7 @@ const app = Vue.createApp({
       }
       return this.name + 'kim';
     },
-  }
+  },
   methods : {
     add(num) {
       this.counter += num;
@@ -958,6 +958,281 @@ app.mount("#events");
 * 해당 예제에서는 `computed property`로 사용된 `fullname`의 dependency는 `name`이기 때문에 `name`이 변경된 경우만 해당 `computed property`를 re-evaluate 함.
 
 # 29. Working with Watchers
+* Watchers?
+  * Vue에서 데이터의 dependency가 변경되었을 때, 호출되도록 할 수 있는 기능
+  * http request와 같이 뭔가 바뀌었을 때, 코드가 실행되게 하는 패턴에 활용하기 적합
+  * [반응형 callback](https://jeongwooahn.medium.com/vue-js-watch%EC%99%80-computed-%EC%9D%98-%EC%B0%A8%EC%9D%B4%EC%99%80-%EC%82%AC%EC%9A%A9%EB%B2%95-e2edce37ec34) 처럼 생각하면 됨.
+
+* Watcher Usage
+  * `data property`에 정의한 `name`과 `watcher`에 등록된 `name()`이 연결되어, `name`의 변화가 생길 때 마다, `name()`을 일종의 콜백 처럼 실행할 수 있음.
+  * `watcher function`은 자동으로 `watcher property`의 가장 최신의 값을 인자로 받아옴
+
+<details>
+<summary>Watchers Basic Example</summary>
+
+```html
+<body>
+  <header>
+    <h1>Vue Events</h1>
+  </header>
+  <section id="events">
+    <h2>Events in Action</h2>
+    <button v-on:click="add(10)">Add 10</button>
+    <button v-on:click="reduce(5)">Subtract 5</button>
+    <p>Result: {{ counter }}</p>
+    <input type="text" v-model="name" />
+    <p>Your Name: {{ fullname }}</p>
+
+    <button @click="resetInput">Reset</button>
+  </section>
+</body>
+```
+
+```js
+const app = Vue.createApp({
+  data() {
+    return {
+      counter: 0,
+      name: '',
+      fullname: ''
+    };
+  },
+  watch: {
+    name(new_value, old_value) {
+      console.log('watcher name() called');
+      console.log('new_value : ' + new_value);
+      console.log('old_value : ' + old_value);
+      if(new_value === ''){
+        this.fullname = ''
+      } else {
+        this.fullname = new_value + ' Kim';
+      }
+      
+    }
+  }
+  methods : {
+    add(num) {
+      this.counter += num;
+    },
+    reduce(num) {
+      this.counter -= num;
+    },
+    resetInput() {
+      this.name = '';
+    }
+  }
+});
+
+app.mount("#events");
+```
+</details>
+
+* 근데 watcher를 사용할 때, 두개 이상의 dependency가 있다면?
+  * 다음의 예제처럼 dependency가 있는 watcher를 모두 정의해줘도 됨.
+  * 하지만 이거는 보다시피 로직이 복잡해 질 가능성이 높음
+
+<details>
+<summary>Watchers with many dependencies Example</summary>
+
+```html
+<body>
+  <header>
+    <h1>Vue Events</h1>
+  </header>
+  <section id="events">
+    <h2>Events in Action</h2>
+    <button v-on:click="add(10)">Add 10</button>
+    <button v-on:click="reduce(5)">Subtract 5</button>
+    <p>Result: {{ counter }}</p>
+    <input type="text" v-model="name" />
+    <input type="text" v-model="lastname" />
+    <button @click="resetInput">Reset</button>
+
+    <p>Your Name: {{ fullname }}</p>
+  </section>
+</body>
+```
+
+```js
+const app = Vue.createApp({
+  data() {
+    return {
+      counter: 0,
+      name: '',
+      lastname: '',
+      fullname: ''
+    };
+  },
+  watch: {
+    name(new_value, old_value) {
+      if(new_value === '') {
+        this.fullname = ''
+      } else {
+        this.fullname = new_value + ' ' + this.lastname;
+      }
+    },
+    lastname(value) {
+      if(value === '') {
+        this.fullname = '';
+      } else {
+        this.fullname = this.name + ' ' + value;
+      }
+    }
+  }
+  methods : {
+    add(num) {
+      this.counter += num;
+    },
+    reduce(num) {
+      this.counter -= num;
+    },
+    resetInput() {
+      this.name = '';
+    }
+  }
+});
+
+app.mount("#events");
+```
+</details>
+
+* 동일한 기능을 computed property를 통해 구현해보자
+  * 엄청 간단함. 
+
+<details>
+<summary>Computed Properties with many dependencies Example</summary>
+
+```html
+<body>
+  <header>
+    <h1>Vue Events</h1>
+  </header>
+  <section id="events">
+    <h2>Events in Action</h2>
+    <button v-on:click="add(10)">Add 10</button>
+    <button v-on:click="reduce(5)">Subtract 5</button>
+    <p>Result: {{ counter }}</p>
+    <input type="text" v-model="name" />
+    <input type="text" v-model="lastname" />
+    <button @click="resetInput">Reset</button>
+
+    <p>Your Name: {{ fullname }}</p>
+  </section>
+</body>
+```
+
+```js
+const app = Vue.createApp({
+  data() {
+    return {
+      counter: 0,
+      name: '',
+      lastname: ''
+    };
+  },
+  computed: {
+    fullname() {
+      if(this.name === '' || this.lastname ==='') {
+        return '';
+      }
+      return this.name + ' ' + this.lastname;
+    }
+  },
+  methods : {
+    add(num) {
+      this.counter += num;
+    },
+    reduce(num) {
+      this.counter -= num;
+    },
+    resetInput() {
+      this.name = '';
+      this.lastname = '';
+    }
+  }
+});
+
+app.mount("#events");
+```
+</details>
+
+* 이와 같이 데이터가 여러 dependency를 가지게 될 경우, `watcher`보다 `computed property`를 활용하는게 좀 더 편해보임
+* 이거는 해당 예제가 `watcher`를 사용하는 적합한 예제라고 보기 어려워서임
+* 다음의 예제를 통해 `watcher`의 기능을 본격적으로 활용해보자
+  * counter가 특정 임계치에 도달했을 때, 특정 동작 수행
+    * HTTP Request를 통해 데이터를 수신받아 활용하거나 타이머 기능같은 것을 구현할 때, `watcher`가 유용하게 활용될 수 있음.
+  * 이걸 통해 보면 `computed property`와 `watcher`는 각각 적합한 사용 방식이 있는 것!
+
+<details>
+<summary>Watcher Example</summary>
+
+```html
+<body>
+  <header>
+    <h1>Vue Events</h1>
+  </header>
+  <section id="events">
+    <h2>Events in Action</h2>
+    <button v-on:click="add(10)">Add 10</button>
+    <button v-on:click="reduce(5)">Subtract 5</button>
+    <p>Result: {{ counter }}</p>
+    <input type="text" v-model="name" />
+    <input type="text" v-model="lastname" />
+    <button @click="resetInput">Reset</button>
+
+    <p>Your Name: {{ fullname }}</p>
+  </section>
+</body>
+```
+
+```js
+const app = Vue.createApp({
+  data() {
+    return {
+      counter: 0,
+      name: '',
+      lastname: ''
+    };
+  },
+  watch: {
+    counter(value){
+      if(value >= 50) {
+        console.log('timer will run after 2 sec');
+        const that = this;
+
+        setTimeout(function(){
+          that.counter = 0;
+          console.log('value exceed boundary(' + value +') -> reset to zero' );
+        }, 2000);
+      }
+    }
+  },
+  computed: {
+    fullname() {
+      if(this.name === '' || this.lastname ==='') {
+        return '';
+      }
+      return this.name + ' ' + this.lastname;
+    }
+  },
+  methods : {
+    add(num) {
+      this.counter += num;
+    },
+    reduce(num) {
+      this.counter -= num;
+    },
+    resetInput() {
+      this.name = '';
+      this.lastname = '';
+    }
+  }
+});
+
+app.mount("#events");
+```
+</details>
+
 
 # 30. Methods vs Computed Properties vs Watchers
 
