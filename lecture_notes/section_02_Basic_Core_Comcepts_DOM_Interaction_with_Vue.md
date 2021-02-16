@@ -1525,6 +1525,7 @@ app.mount('#styling');
 
 
 # Assign 4 : Time to Practice : Dynamic Styling
+* [link_assign4](../src/Assign_04)
 
 # 36. Module Summary
 
