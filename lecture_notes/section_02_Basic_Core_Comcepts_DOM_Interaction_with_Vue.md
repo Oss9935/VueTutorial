@@ -1528,5 +1528,21 @@ app.mount('#styling');
 * [link_assign4](../src/Assign_04)
 
 # 36. Module Summary
+* DOM & Templates
+  * Vue can be used to define the goal instead of the steps(Declarative Approach)
+  * Connect Vue to HTML via `mount`: Vue then renders the real DOM based on the connected template
+  
+* DOM & Event Bindings
+  * You can bind data via interpolation `{{ }}` or the `v-bind` (`:`) directive
+  * You listen for events via `v-on` (`@`)
+  
+* Reactivity
+  * Vue updates the real DOM for you when bound data changes
+  * Computed properties and watchers allow you to react to data changes
+
+* Styling
+  * Dynamic CSS class and inline style bindings are supported by Vue
+  * Vue offers multiple special syntaxes(object-based, array-based) for efficient bindings
 
 # Module Resources
+  * no description
