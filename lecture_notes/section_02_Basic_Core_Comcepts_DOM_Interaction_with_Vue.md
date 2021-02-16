@@ -1235,8 +1235,36 @@ app.mount("#events");
 
 
 # 30. Methods vs Computed Properties vs Watchers
+* Methods
+  * `event binding`이나 `data binding`과 함께 사용
+  * `data binding` : Method는 컴포넌트의 `"re-render cycle"`에 따라 계속 재실행 됨.
+  * 최적화를 위해 항상 `re-render`를 보장해야하는 이벤트나 데이터에 활용하는 것이 좋음(매번 `re-evaluated`되기 때문)
+
+* Computed
+  * `data binding`에서 활용됨
+  * `computed properties`는 해당 데이터와 의존성이 있는 데이터가 변경될 때 `re-evaluated` 됨
+  * dependency가 있는 데이터 바인딩 시 활용하기 좋음
+
+* Watch
+  * template에서 `직접적으로` 사용되지는 않음
+  * 특정 데이터에 변화가 발생하였을 때, 콜백처럼 코드를 실행할 때 사용하기 좋음
+    * e.g. send Http request, timer logic
+  * Use for `non-data update` you want to make
 
 # 31. v-bind and v-on Shorthands
+
+* shorthands for v-bind
+```html
+<input v-bind:value="name" />
+<input :value="name" />
+```
+* shorthands for v-on
+```html
+<button v-on:click="handler">Sign Up</button>
+<button @click="handler">Sign Up</button>
+```
+
+* v-model에 대한 shorthands는 따로 없음
 
 # Assigin 3 : Time to Practice: Reactivity
 
