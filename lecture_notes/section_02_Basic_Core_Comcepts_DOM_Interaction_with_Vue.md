@@ -1270,8 +1270,165 @@ app.mount("#events");
 * [link_assign3](../src/Assign_03)
 
 # 32. Dynamic Styling with inline Styles
+* Vue에서 페이지의 style을 동적으로 제어하는 방법(`v-bind` 사용하면 됨!)
+
+  ```html
+  <div :style="{borderColor: boxASelected ? 'red' : '#ccc'}"></div>
+  ```
+
+* 간단한 예제
+<details>
+<summary>Basic Example for Dynamic Styling(with Inline Styles)</summary>
+
+```html
+<body>
+  <header>
+    <h1>Vue Dynamic Styling</h1>
+  </header>
+  <section id="styling">
+    <div 
+      class="demo" 
+      :style="{borderColor: boxASelected ? 'red' : '#ccc'}"
+      @click="boxSelected('A')" 
+    ></div>
+    <div 
+      class="demo" 
+      :style="{'border-color': boxBSelected ? 'red' : '#ccc'}"
+      @click="boxSelected('B')"
+    ></div>
+    <div 
+      class="demo" 
+      :style="{borderColor: boxCSelected ? 'red' : '#ccc'}"
+      @click="boxSelected('C')"
+    ></div>
+  </section>
+</body>
+```
+
+```js
+const app = Vue.createApp({
+    data() {
+        return {
+            boxASelected : false,
+            boxBSelected : false,
+            boxCSelected : false,
+        };
+    },
+    methods : {
+        boxSelected(box){
+            if(box === 'A') {
+                this.boxASelected = true;
+            } else if (box === 'B') {
+                this.boxBSelected = true;
+            } else if (box === 'C') {
+                this.boxCSelected = true;
+            } else {;}
+        }
+    }
+});
+
+app.mount('#styling');
+```
+
+</details>
 
 # 33. Adding CSS Classes Dynamically
+* Inline CSS Style을 지양하기 위해, 클릭 시 활성화 할 css 클래스를 정의하고, 사용자가 박스 클릭 시 이를 활성화하는 방식으로 구현해보자
+
+  ```css
+  .demo {
+    width: calc(100% - 32px);
+    height: 100px;
+    margin: 16px;
+    border: 2px dashed #ccc;
+  }
+
+  .active {
+    border-color: red;
+    background-color: salmon;
+  }
+  ```
+
+  ```html
+  <div 
+    :class="boxASelected ? 'demo active' : 'demo'" 
+    @click="boxSelected('A')" 
+  ></div>
+  ```
+
+* Vue는 이러한 Dynamic CSS Class 바인딩을 위한 v-bind syntax를 지원함
+  ```html
+    <div 
+      :class="{demo: true, active: boxASelected}"
+      @click="boxSelected('A')" 
+    ></div>
+  ```
+
+* 그런데 어차피, `demo`와 같이 중복되는 클래스는 동적 바인딩 안하고 사용하는게 더 편할 수도 있음.
+  ```html
+    <div
+      class="demo"
+      :class="{active: boxASelected}"
+      @click="boxSelected('A')" 
+    ></div>
+  ```
+
+* Dynamic CSS Class Styling 종합
+
+<details>
+<summary>With Toggling Example</summary>
+
+```html
+<body>
+  <header>
+    <h1>Vue Dynamic Styling</h1>
+  </header>
+  <section id="styling">
+    <div 
+      class="demo" 
+      :class="{active : boxASelected}"
+      @click="boxSelected('A')" 
+    ></div>
+    <div 
+      class="demo" 
+      :class="{active : boxBSelected}"
+      @click="boxSelected('B')"
+    ></div>
+    <div 
+      class="demo" 
+      :class="{active : boxCSelected}"}
+      @click="boxSelected('C')"
+    ></div>
+  </section>
+</body>
+```
+
+```js
+const app = Vue.createApp({
+    data() {
+        return {
+            boxASelected : false,
+            boxBSelected : false,
+            boxCSelected : false,
+        };
+    },
+    methods : {
+        boxSelected(box){
+            if(box === 'A') {
+                this.boxASelected = !this.boxASelected;
+            } else if (box === 'B') {
+                this.boxBSelected = !this.boxBSelected;
+            } else if (box === 'C') {
+                this.boxCSelected = !this.boxCSelected;
+            } else {;}
+        }
+    }
+});
+
+app.mount('#styling');
+```
+
+</details>
 
 # 34. Classes & Computed Properties
 
