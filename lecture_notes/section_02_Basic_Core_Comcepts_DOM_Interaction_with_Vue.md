@@ -819,10 +819,11 @@
 * Vue 템플릿에서 데이터 interpolation을 사용할 때, 템플릿 내의 함수 호출 지양
 * Why?
   * Vue는 내부적으로 변경된 데이터를 캐싱해놓고 변경 사항이 있을 때만 DOM에 없데이트 함.
-  * 하지만 템플릿 내에서 데이터가 아닌 함수 호출의 리턴값을 받아서 데이터로 사용하는 아래의 예제와 같은 경우, Vue 앱이 내부적으로 
+  * 하지만 템플릿 내에서 데이터가 아닌 함수 호출의 리턴값을 받아서 데이터로 사용하는 아래의 예제와 같은 경우, Vue 앱이 데이터의 변경사항을 추적하기 위해 특정 요소에 대한 업데이트가 수행될 때 마다, 내부적으로 해당 함수를 재실행하여 변경된 값이 있나 없나 확인해야 함.
+* 따라서 다음 챕터에서 이러한 현상을 피하기 위한 최적화를 위한 Vue의 Feature에 대해 알아볼 예정
 
 <details>
-<summary>Advanced Reactivity</summary>
+<summary>Advanced Reactivity Example Code</summary>
 
 ```html
 <body>
@@ -875,6 +876,86 @@ app.mount("#events");
 </details>
 
 # 28. Introducing Computed Properties
+* 위와 같이 템플릿 내 메서드의 리턴값을 활용하는 경우, 데이터 업데이트가 이루어질 때 마다 Vue가 데이터를 reevaluate 하기 위해 메서드를 실행해야 함.
+* 이처럼 reevaluate가 불필요하게 수행되는 현상을 방지하기 위해 다음과 같은 해결책을 생각해 볼 수 있음
+  * Before
+  ```html
+  <p>Your Name: {{ outputFullName() }}</p>
+  ```
+
+  * After
+  ```html
+  <p>Your Name: {{name + 'Kim'}}</p>
+  ```
+
+* 하지만 이와 같은 방법을 활용하게 되면, html 내에 로직을 포함하는 구조가 됨.
+
+* Vue는 이와 같은 상황에서 활용 가능한 Feature를 지원함 : `Computed Properties`
+
+* What is `Computed Properties`?
+  * [반응형 getter](https://jeongwooahn.medium.com/vue-js-watch%EC%99%80-computed-%EC%9D%98-%EC%B0%A8%EC%9D%B4%EC%99%80-%EC%82%AC%EC%9A%A9%EB%B2%95-e2edce37ec34) 라고 생각하면 됨.
+  * `computed properties`는 메서드의 형태와 유사하지만, `Computed Properties`를 활용하게 되면 Vue가 데이터의 dependency를 보고, dependency가 변경되었을 때만 실행되게 할 수 있음.
+  * `computed properties`는 메서드의 형태지만, Vue의 `data property`와 같은 형식으로 사용됨.
+  * `computed properties`의 이름은 `data property`에 정의한 것처럼 사용됨.
+
+<details>
+<summary>Computed Properties Example</summary>
+
+```html
+<body>
+  <header>
+    <h1>Vue Events</h1>
+  </header>
+  <section id="events">
+    <h2>Events in Action</h2>
+    <button v-on:click="add(10)">Add 10</button>
+    <button v-on:click="reduce(5)">Subtract 5</button>
+    <p>Result: {{ counter }}</p>
+    <input type="text" v-model="name" />
+    <!-- Do not use computed property like below.
+    <p>Your Name: {{ fullname() }}</p> 
+    -->
+    <p>Your Name: {{ fullname }}</p>
+
+    <button @click="resetInput">Reset</button>
+  </section>
+</body>
+```
+
+```js
+const app = Vue.createApp({
+  data() {
+    return {
+      counter: 0,
+      name: ''
+    };
+  },
+  computed : {
+    fullname() {
+      if(this.name === '') {
+        return '';
+      }
+      return this.name + 'kim';
+    },
+  }
+  methods : {
+    add(num) {
+      this.counter += num;
+    },
+    reduce(num) {
+      this.counter -= num;
+    },
+    resetInput() {
+      this.name = '';
+    }
+  }
+});
+
+app.mount("#events");
+```
+</details>
+
+* 해당 예제에서는 `computed property`로 사용된 `fullname`의 dependency는 `name`이기 때문에 `name`이 변경된 경우만 해당 `computed property`를 re-evaluate 함.
 
 # 29. Working with Watchers
 
