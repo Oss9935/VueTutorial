@@ -1431,6 +1431,89 @@ app.mount('#styling');
 </details>
 
 # 34. Classes & Computed Properties
+* 템플릿에서 다음과 같이 로직이 들어간 부분이 있다면,
+  ```html
+    <div 
+      :class="{demo: true, active: boxASelected}"
+      @click="boxSelected('A')" 
+    ></div>
+  ```
+
+* 여기서 computed properties를 활용해서 더 깔끔하게 할 수도 있음
+  ```html
+    <div 
+      :class="boxAClasses"
+      @click="boxSelected('A')" 
+    ></div>
+  ```
+
+<details>
+<summary>Dynamic CSS Class Styling Example using computed properties</summary>
+
+```html
+<body>
+  <header>
+    <h1>Vue Dynamic Styling</h1>
+  </header>
+  <section id="styling">
+    <div 
+      class="demo" 
+      :class="boxAClasses"
+      @click="boxSelected('A')" 
+    ></div>
+    <div 
+      class="demo" 
+      :class="boxBClasses"
+      @click="boxSelected('B')"
+    ></div>
+    <div 
+      class="demo" 
+      :class="boxCClasses"}
+      @click="boxSelected('C')"
+    ></div>
+  </section>
+</body>
+```
+
+```js
+const app = Vue.createApp({
+    data() {
+        return {
+            boxASelected : false,
+            boxBSelected : false,
+            boxCSelected : false,
+        };
+    },
+    computed : {
+      boxAClasses() {
+        return {active: this.boxASelected};
+      },
+      boxBClasses() {
+        return {active: this.boxBSelected};
+      },
+      boxCClasses() {
+        return {active: this.boxCSelected};
+      }
+    }
+    methods : {
+        boxSelected(box){
+            if(box === 'A') {
+                this.boxASelected = !this.boxASelected;
+            } else if (box === 'B') {
+                this.boxBSelected = !this.boxBSelected;
+            } else if (box === 'C') {
+                this.boxCSelected = !this.boxCSelected;
+            } else {;}
+        }
+    }
+});
+
+app.mount('#styling');
+```
+
+</details>
+
+
 
 # 35. Dynamic Classes: Array Syntax
 
