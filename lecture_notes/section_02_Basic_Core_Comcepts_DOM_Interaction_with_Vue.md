@@ -1267,6 +1267,7 @@ app.mount("#events");
 * v-model에 대한 shorthands는 따로 없음
 
 # Assigin 3 : Time to Practice: Reactivity
+* [link_assign3](../src/Assign_03)
 
 # 32. Dynamic Styling with inline Styles
 
