@@ -1,4 +1,7 @@
 # 38. Module Introduction
+* 조건에 따라 컨텐츠 렌더링 여부를 결정하는 방법
+
+* 리스트 형태로 된 컨텐츠를 출력하는 방법
 
 # 39. Understanding the Problem
 
