@@ -407,6 +407,205 @@ app.mount('#user-goals');
 
 # 46. List & Keys
 
+* 만약 v-for로 반복적으로 렌더링하는 코드에서 다음의 코드와 같이 새로운 입력을 받는 태그를 추가적으로 삽입하게 되면, 사용자가 입력을 위해 해당 input 태그를 클릭하였을 때, click listner인 `removeGoal(idx)`가 동작하게 됨.
+
+```html
+    <section id="user-goals">
+      <h2>My course goals</h2>
+      <input type="text" v-model="enteredGoalValue"/>
+      <button @click="addGoal">Add Goal</button>
+      <p v-if="goals.length === 0">No goals have been added yet - please start adding some!</p>
+      <ul v-else-if="goals.length > 0">
+        <li v-for="(goal, idx) in goals" @click="removeGoal(idx)"> {{ goal }}</li>
+        <label for="sub_input">Sub Input : </label>
+        <input type="text" id="sub_input"/>
+      </ul>
+    </section>
+```
+
+* 이를 방지하기 위해 아래와 같이 input tag에 click `event modifier` 인 `stop` modifier를 지정해주는 방식을 사용 가능
+
+```html
+    <section id="user-goals">
+      <h2>My course goals</h2>
+      <input type="text" v-model="enteredGoalValue"/>
+      <button @click="addGoal">Add Goal</button>
+      <p v-if="goals.length === 0">No goals have been added yet - please start adding some!</p>
+      <ul v-else-if="goals.length > 0">
+        <li v-for="(goal, idx) in goals" @click="removeGoal(idx)"> {{ goal }}</li>
+        <label for="sub_input">Sub Input : </label>
+        <input type="text" id="sub_input" @click.stop/>
+      </ul>
+    </section>
+```
+
+* 다음 코드는 Evennt Bubble Up 현상을 피해, 하위 엘리먼트의 버튼 클릭에 대한 핸들러를 호출하는 코드
+  * `stop` modifier?
+    * `stop` : stop event propagation
+    * `prevent` : prevent browser default
+  * Bubble Up?
+    * 자식 태그에서 이벤트가 발생하면, 해당 태그의 부모 태그 또한 이벤트에 반응하게 됨!
+
+<details>
+<summary>index.html</summary>
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vue Basics</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Jost:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <script src="https://unpkg.com/vue@next" defer></script>
+    <script src="app.js" defer></script>
+  </head>
+  <body>
+    <header>
+      <h1>Vue Course Goals</h1>
+    </header>
+    <section id="user-goals">
+      <h2>My course goals</h2>
+      <input type="text" v-model="enteredGoalValue"/>
+      <button @click="addGoal">Add Goal</button>
+      <p v-if="goals.length === 0">No goals have been added yet - please start adding some!</p>
+      <ul v-else-if="goals.length > 0">
+        <li v-for="(goal, idx) in goals" @click="removeGoal(idx)"> 
+          <label for="sub_input" @click.stop>{{ goal }}'s Sub Input : </label>
+          <input type="text" id="sub_input" @click.stop/>
+          <button @click.stop="testListener">Click</button>
+        </li>
+      </ul>
+
+    </section>
+  </body>
+</html>
+
+
+```
+</details>
+
+<details>
+<summary>app.js</summary>
+
+```js
+const app = Vue.createApp({
+  data() {
+    return { 
+      goals: [],
+      enteredGoalValue: '',
+    };
+  },
+  methods : {
+    addGoal() {
+      if (this.enteredGoalValue !== "") {
+        this.goals.push(this.enteredGoalValue);
+      }
+    },
+    removeGoal(idx) {
+      console.log(idx);
+      if(idx >= 0) {
+        this.goals.splice(idx, 1);
+      }
+    },
+    testListener(){
+      console.log('test listner called');
+    }
+  }
+});
+
+app.mount('#user-goals');
+
+
+```
+</details>
+
+* `v-for`를 사용할 떄는 DOM 내용이 단순한 경우나 의도적인 성능 향상을 위해 기본 동작에 의존하지 않는 경우를 제외하면, 가능하면 v-for에 `key`를 지정해서 사용하자!
+  * Vue의 Maintaining State
+  * Vue가 `v-for`에서 렌더링된 엘리먼트 목록을 갱신할 때, 내부적으로 최적화(`in-place-patch`) 전략을 사용하기 때문에, 의도치 않은 오류가 발생할 수 있음
+  * [읽어보기](https://kr.vuejs.org/v2/guide/list.html)
+
+<details>
+<summary>index.html</summary>
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vue Basics</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Jost:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <script src="https://unpkg.com/vue@next" defer></script>
+    <script src="app.js" defer></script>
+  </head>
+  <body>
+    <header>
+      <h1>Vue Course Goals</h1>
+    </header>
+    <section id="user-goals">
+      <h2>My course goals</h2>
+      <input type="text" v-model="enteredGoalValue"/>
+      <button @click="addGoal">Add Goal</button>
+      <p v-if="goals.length === 0">No goals have been added yet - please start adding some!</p>
+      <ul v-else-if="goals.length > 0">
+        <li v-for="(goal, idx) in goals" :key="goal" @click="removeGoal(idx)"> 
+          <label for="sub_input" @click.stop>{{ goal }}'s Sub Input : </label>
+          <input type="text" id="sub_input" @click.stop/>
+          <button @click.stop="testListener">Click</button>
+        </li>
+      </ul>
+
+    </section>
+  </body>
+</html>
+
+```
+</details>
+
+<details>
+<summary>app.js</summary>
+
+```js
+const app = Vue.createApp({
+  data() {
+    return { 
+      goals: [],
+      enteredGoalValue: '',
+    };
+  },
+  methods : {
+    addGoal() {
+      if (this.enteredGoalValue !== "") {
+        this.goals.push(this.enteredGoalValue);
+      }
+    },
+    removeGoal(idx) {
+      console.log(idx);
+      if(idx >= 0) {
+        this.goals.splice(idx, 1);
+      }
+    },
+    testListener(){
+      console.log('test listner called');
+    }
+  }
+});
+
+app.mount('#user-goals');
+
+
+```
+</details>
+
 # Assignment 05 : Conditional Content & Lists
 
 # 47. Module Summary
