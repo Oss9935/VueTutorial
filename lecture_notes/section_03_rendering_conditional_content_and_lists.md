@@ -176,7 +176,15 @@ app.mount('#user-goals');
 
 ```
 </details>
+
 # 42. Using v-show Instead of v-if
+
+* v-show를 사용하면 DOM 자체에는 컨텐츠가 포함되지만, 조건에 따라 `style="display:none"` 이 적용되어 유저에게 보였다가 안보였다가 함!
+
+* 이와 같이 컨텐츠를 DOM 자체에는 포함시키되, 조건에 따라 display 여부만 결정하는 방식은 성능 면에서 `v-if` statement 보다 장점이 있음.
+  * 버튼 toggle에 따라 보였다 안보였다가 자주 하는 컨텐츠의 경우 `v-show`를 사용하는 것이 성능면에서 좋음.
+
+* 하지만 `v-show` 를 남용하게 되면 DOM 자체에 불필요하게 포함되는 컨텐츠가 너무 많아질 수 있기 때문에, 위와 같은 경우를 제외하면 `v-if`를 사용하는 것을 권장한다고 함.
 
 # 43. Rendering List of Data
 
