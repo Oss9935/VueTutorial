@@ -186,6 +186,71 @@ app.mount('#user-goals');
 
 * 하지만 `v-show` 를 남용하게 되면 DOM 자체에 불필요하게 포함되는 컨텐츠가 너무 많아질 수 있기 때문에, 위와 같은 경우를 제외하면 `v-if`를 사용하는 것을 권장한다고 함.
 
+
+<details>
+<summary>index.html<summary>
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vue Basics</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Jost:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <script src="https://unpkg.com/vue@next" defer></script>
+    <script src="app.js" defer></script>
+  </head>
+  <body>
+    <header>
+      <h1>Vue Course Goals</h1>
+    </header>
+    <section id="user-goals">
+      <h2>My course goals</h2>
+      <input type="text" v-model="enteredGoalValue"/>
+      <button @click="addGoal">Add Goal</button>
+      <p v-show="goals.length === 0">No goals have been added yet - please start adding some!</p>
+      <ul v-show="goals.length > 0">
+        <li>Goal</li>
+      </ul>
+    </section>
+  </body>
+</html>
+
+```
+</details>
+
+<details>
+<summary>app.js<summary>
+
+```js
+const app = Vue.createApp({
+  data() {
+    return { 
+      goals: [],
+      enteredGoalValue: '',
+    };
+  },
+  methods : {
+    addGoal() {
+      if (this.enteredGoalValue !== "") {
+        this.goals.push(this.enteredGoalValue);
+      }
+    }
+  }
+});
+
+app.mount('#user-goals');
+
+```
+</details>
+
+
+
 # 43. Rendering List of Data
 
 # 44. Diving Deeper into v-for
