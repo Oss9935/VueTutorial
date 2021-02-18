@@ -527,6 +527,8 @@ app.mount('#user-goals');
 * `v-for`를 사용할 떄는 DOM 내용이 단순한 경우나 의도적인 성능 향상을 위해 기본 동작에 의존하지 않는 경우를 제외하면, 가능하면 v-for에 `key`를 지정해서 사용하자!
   * Vue의 Maintaining State
   * Vue가 `v-for`에서 렌더링된 엘리먼트 목록을 갱신할 때, 내부적으로 최적화(`in-place-patch`) 전략을 사용하기 때문에, 의도치 않은 오류가 발생할 수 있음
+  * `key`에 대한 이상적인 값은 각 항목을 식별할 수 있는 고유한 ID여야 함!
+    * 배열의 `index`와 같이 상황에 따라 변할 수 있는 값은 `key`로 사용하는 것은 적절치 않음!
   * [읽어보기](https://kr.vuejs.org/v2/guide/list.html)
 
 <details>
@@ -557,6 +559,8 @@ app.mount('#user-goals');
       <button @click="addGoal">Add Goal</button>
       <p v-if="goals.length === 0">No goals have been added yet - please start adding some!</p>
       <ul v-else-if="goals.length > 0">
+
+        <!-- key를 지정해서 사용!  -->
         <li v-for="(goal, idx) in goals" :key="goal" @click="removeGoal(idx)"> 
           <label for="sub_input" @click.stop>{{ goal }}'s Sub Input : </label>
           <input type="text" id="sub_input" @click.stop/>
@@ -608,7 +612,10 @@ app.mount('#user-goals');
 
 # Assignment 05 : Conditional Content & Lists
 
+* [link_assign5](./src/Assign_05)
+
 # 47. Module Summary
+* no description
 
 # 48. Module Resources
 * no description
