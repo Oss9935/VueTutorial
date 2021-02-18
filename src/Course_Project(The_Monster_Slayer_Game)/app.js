@@ -17,6 +17,9 @@ const app = Vue.createApp({
         return {
             playerHealth : 100,
             monsterHealth : 100,
+            currentRound : 1,
+            specialAttackDuration : 3,
+            specialAttackCharging : 3,
         };
     },
     computed: {
@@ -41,6 +44,13 @@ const app = Vue.createApp({
             return {
                 width : playerHealth + '%'
             };
+        },
+        isImpossibleToSpecialAttack() {
+            if(this.specialAttackCharging == this.specialAttackDuration) {
+                return false;
+            } else {
+                return true;
+            }
         }
     },
     methods : {
@@ -50,12 +60,29 @@ const app = Vue.createApp({
 
             this.monsterHealth -= randomDamage;
             this.attackPlayer();
+            this.currentRound++;
+            this.specialAttackCharging++;
         },
         attackPlayer() {
             const minDamage = 8, maxDamage = 15;
             const randomDamage = getRandomValue(minDamage, maxDamage);
 
             this.playerHealth -= randomDamage;
+        },
+        specialAttackMonster() {
+            const randomDamage = getRandomValue(10, 25);
+
+            if (this.specialAttackCharging == this.specialAttackDuration){
+                this.currentRound++;
+                this.specialAttackCharging = 0;
+                this.monsterHealth -= randomDamage;
+                this.attackPlayer();
+            } else {
+                alert('Attack Failed!\nCharging Power ('+ 
+                this.specialAttackCharging % this.specialAttackDuration + '/' + 
+                this.specialAttackDuration +')');
+            }
+            
         }
     }
 });
