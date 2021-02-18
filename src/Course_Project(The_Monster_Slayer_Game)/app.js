@@ -46,10 +46,17 @@ const app = Vue.createApp({
             };
         },
         isImpossibleToSpecialAttack() {
-            if(this.specialAttackCharging == this.specialAttackDuration) {
+            if(this.specialAttackCharging >= this.specialAttackDuration) {
                 return false;
             } else {
                 return true;
+            }
+        },
+        isFullHealth() {
+            if(this.playerHealth == 100) {
+                return true;
+            } else {
+                return false;
             }
         }
     },
@@ -72,7 +79,7 @@ const app = Vue.createApp({
         specialAttackMonster() {
             const randomDamage = getRandomValue(10, 25);
 
-            if (this.specialAttackCharging == this.specialAttackDuration){
+            if (this.specialAttackCharging >= this.specialAttackDuration){
                 this.currentRound++;
                 this.specialAttackCharging = 0;
                 this.monsterHealth -= randomDamage;
@@ -82,7 +89,17 @@ const app = Vue.createApp({
                 this.specialAttackCharging % this.specialAttackDuration + '/' + 
                 this.specialAttackDuration +')');
             }
-            
+        },
+        healPlayer() {
+            const healValue = getRandomValue(8, 20);
+            if(this.playerHealth + healValue > 100){
+                this.playerHealth = 100;
+            } else {
+                this.playerHealth += healValue;
+            }
+            this.attackPlayer();
+            this.currentRound++;
+            this.specialAttackCharging++;
         }
     }
 });
