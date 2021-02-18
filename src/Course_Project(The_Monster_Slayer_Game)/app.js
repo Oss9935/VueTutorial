@@ -19,6 +19,30 @@ const app = Vue.createApp({
             monsterHealth : 100,
         };
     },
+    computed: {
+        monsterBarStyles() {
+            let monsterHealth = this.monsterHealth;
+
+            if(monsterHealth <= 0) {
+                monsterHealth = 0;
+            }
+
+            return {
+                width : monsterHealth + '%'
+            };
+        },
+        playerBarStyles() {
+            let playerHealth = this.playerHealth;
+
+            if(playerHealth <= 0) {
+                playerHealth = 0;
+            }
+
+            return {
+                width : playerHealth + '%'
+            };
+        }
+    },
     methods : {
         attackMonster() {
             const minDamage = 5,  maxDamage = 12;
