@@ -253,7 +253,72 @@ app.mount('#user-goals');
 
 * `v-for` statuement 내에서 사용하는 변수는 해당 엘리먼트 내부에서만 사용 가능
 
+<details>
+<summary>index.html</summary>
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vue Basics</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Jost:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <script src="https://unpkg.com/vue@next" defer></script>
+    <script src="app.js" defer></script>
+  </head>
+  <body>
+    <header>
+      <h1>Vue Course Goals</h1>
+    </header>
+    <section id="user-goals">
+      <h2>My course goals</h2>
+      <input type="text" v-model="enteredGoalValue"/>
+      <button @click="addGoal">Add Goal</button>
+      <p v-if="goals.length === 0">No goals have been added yet - please start adding some!</p>
+      <ul v-else-if="goals.length > 0">
+        <li v-for="goal in goals">{{ goal }}</li>
+      </ul>
+    </section>
+  </body>
+</html>
+
+
+```
+</details>
+
+<details>
+<summary>app.js</summary>
+
+```js
+const app = Vue.createApp({
+  data() {
+    return { 
+      goals: [],
+      enteredGoalValue: '',
+    };
+  },
+  methods : {
+    addGoal() {
+      if (this.enteredGoalValue !== "") {
+        this.goals.push(this.enteredGoalValue);
+      }
+    }
+  }
+});
+
+app.mount('#user-goals');
+
+```
+</details>
+
 # 44. Diving Deeper into v-for
+
+
 
 # 45. Removing List Items
 
