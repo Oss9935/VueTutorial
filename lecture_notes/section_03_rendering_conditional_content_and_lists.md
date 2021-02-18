@@ -50,7 +50,7 @@
 # 40. Rendering Content Conditionally
 
 <details>
-<summary>index.html<summary>
+<summary>index.html</summary>
 
 ```html
 <!DOCTYPE html>
@@ -87,7 +87,7 @@
 </details>
 
 <details>
-<summary>app.js<summary>
+<summary>app.js</summary>
 
 ```js
 const app = Vue.createApp({
@@ -116,7 +116,7 @@ app.mount('#user-goals');
 * `v-if`, `v-else`, `v-else-if` statement의 특징은 조건에 따라 해당 엘리먼트를 DOM 내에 포함시킬지 말지에 대한 여부를 결정하는 것!
 
 <details>
-<summary>index.html<summary>
+<summary>index.html</summary>
 
 ```html
 <!DOCTYPE html>
@@ -153,7 +153,7 @@ app.mount('#user-goals');
 </details>
 
 <details>
-<summary>app.js<summary>
+<summary>app.js</summary>
 
 ```js
 const app = Vue.createApp({
@@ -188,7 +188,7 @@ app.mount('#user-goals');
 
 
 <details>
-<summary>index.html<summary>
+<summary>index.html</summary>
 
 ```html
 <!DOCTYPE html>
@@ -225,7 +225,7 @@ app.mount('#user-goals');
 </details>
 
 <details>
-<summary>app.js<summary>
+<summary>app.js</summary>
 
 ```js
 const app = Vue.createApp({
@@ -248,8 +248,6 @@ app.mount('#user-goals');
 
 ```
 </details>
-
-
 
 # 43. Rendering List of Data
 
