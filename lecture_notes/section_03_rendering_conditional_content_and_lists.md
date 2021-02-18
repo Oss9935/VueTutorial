@@ -251,6 +251,8 @@ app.mount('#user-goals');
 
 # 43. Rendering List of Data
 
+* `v-for` statuement 내에서 사용하는 변수는 해당 엘리먼트 내부에서만 사용 가능
+
 # 44. Diving Deeper into v-for
 
 # 45. Removing List Items
