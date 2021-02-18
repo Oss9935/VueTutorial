@@ -399,8 +399,11 @@ app.mount('#user-goals');
 </details>
 
 
-
 # 45. Removing List Items
+
+* `v-for` statuement 내에서 사용하는 변수는 해당 엘리먼트 내부에서 사용 가능하기 때문에 다음과 같이 간단히 구현 가능
+
+* `<li v-for="(goal, idx) in goals" @dblclick="removeGoal(idx)"> {{ goal }}</li>`
 
 # 46. List & Keys
 
