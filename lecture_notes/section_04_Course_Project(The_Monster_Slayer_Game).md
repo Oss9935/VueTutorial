@@ -550,9 +550,57 @@ app.mount('#game')
 
 # 54. Adding a "Game Over" Screen
 
+<details>
+<summary>code</summary>
+
+* index.html
+
+```html
+
+```
+
+* app.js
+
+```js
+
+```
+</details>
+
 # 55. Finishing the Core Functionality
 
+<details>
+<summary>code</summary>
+
+* index.html
+
+```html
+
+```
+
+* app.js
+
+```js
+
+```
+</details>
+
 # 56. Adding a Battle Log
+
+<details>
+<summary>code</summary>
+
+* index.html
+
+```html
+
+```
+
+* app.js
+
+```js
+
+```
+</details>
 
 # 57. Module Resources
 
